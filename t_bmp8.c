@@ -2,7 +2,8 @@
 #include "bmp8.h"
 
 t_bmp8* bmp8_loadImage(const char *filename) {
-    FILE *file = fopen(filename, "rb");
+    // permet de lire une image en niveaux de gris à partir d’un fichier BMP, filename
+    FILE *file = fopen(filename, "rb"); //Ouvre le fichier en mode binaire
     if (!file) {
         printf("Erreur : Impossible d'ouvrir le fichier %s\n", filename);
         return NULL;

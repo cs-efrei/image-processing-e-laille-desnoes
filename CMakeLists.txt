@@ -3,5 +3,4 @@ project(LailleDesnoes_projetimage C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(LailleDesnoes_projetimage
-    main.c)
+add_executable(LailleDesnoes_projetimage main.c bmp8.c)
