@@ -18,7 +18,7 @@ int main() {
             printf("Nom du fichier de sortie : ");
             scanf("%s", filename);
             bmp8_saveImage(filename, img);
-        } else if (choice == 3 && img) {
+        } /*else if (choice == 3 && img) {
             bmp8_negative(img);
         } else if (choice == 4 && img) {
             int value;
@@ -30,7 +30,7 @@ int main() {
             printf("Valeur de seuil : ");
             scanf("%d", &threshold);
             bmp8_threshold(img, threshold);
-        } else if (choice == 6) {
+        } */ else if (choice == 6) {
             if (img) bmp8_free(img);
             break;
         } else {
@@ -38,6 +38,6 @@ int main() {
         }
     }
     return 0;
-} c
+}
 
 
