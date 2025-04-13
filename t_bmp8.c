@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <math.h> // utile que pour le round de la fonction applyfilter
+
 t_bmp8* bmp8_loadImage(const char *filename) {
     // permet de lire une image en niveaux de gris à partir d’un fichier BMP, filename
     FILE *file = fopen(filename, "rb"); //Ouvre le fichier en mode binaire
@@ -46,7 +48,8 @@ void bmp8_printInfo(t_bmp8 *img) {
     printf("Height: %d\n", img->height);
     printf("Data Size: %d\n", img->dataSize);
 }
-/*
+
+// Fonction pour inverser les couleurs de l'image
 void bmp8_negative(t_bmp8 *img) {
     for (int i = 0; i < img->dataSize; i++) {
         img->data[i] = 255 - img->data[i];
@@ -56,31 +59,76 @@ void bmp8_negative(t_bmp8 *img) {
 void bmp8_brightness(t_bmp8 *img, int value) {
     for (int i = 0; i < img->dataSize; i++) {
         int temp = img->data[i] + value;
-        img->data[i] = (temp > 255) ? 255 : (temp < 0) ? 0 : temp;
+        if (temp > 255) {
+            temp = 255;
+        }
+        else if (temp < 0) {
+            temp = 0;
+        }
+        img->data[i] = temp;
     }
 }
 
 void bmp8_threshold(t_bmp8 *img, int threshold) {
     for (int i = 0; i < img->dataSize; i++) {
-        img->data[i] = (img->data[i] >= threshold) ? 255 : 0;
+        if (img->data[i] >= threshold) {
+            img->data[i] = 255;
+        }
+        else {
+            img->data[i] = 0;
+        }
     }
 }
 
-void bmp8_applyFilter(t_bmp8 img, float kernel[3][3]) {
-    unsigned charnewData = (unsigned char )malloc(img->dataSize);
-    for (int y = 1; y < img->height - 1; y++) {
-        for (int x = 1; x < img->width - 1; x++) {
-            float sum = 0;
-            for (int j = -1; j <= 1; j++) {
-                for (int i = -1; i <= 1; i++) {
-                    sum += img->data[(y + j) img->width + (x + i)] * kernel[j + 1][i + 1];
+// Fonction pour appliquer un filtre sur une image en niveaux de gris
+void bmp8_applyFilter(t_bmp8 *img, float **kernel, int kernelSize) {
+    if (img == NULL || img->data == NULL || kernel == NULL || kernelSize % 2 == 0) {
+        return; // Vérification des paramètres
+    }
+
+    unsigned int width = img->width;
+    unsigned int height = img->height;
+    int offset = kernelSize / 2;
+
+    // Allocation de mémoire pour stocker les nouveaux pixels après filtration
+    unsigned char *newData = (unsigned char *)malloc(img->dataSize);
+    if (newData == NULL) {
+        printf("Erreur d'allocation de mémoire.\n");
+        return;
+    }
+
+    // Application du filtre par convolution
+    for (unsigned int y = 0; y < height; y++) {
+        for (unsigned int x = 0; x < width; x++) {
+            float sum = 0.0;
+
+            // Convolution selon la formule
+            for (int i = -offset; i <= offset; i++) {
+                for (int j = -offset; j <= offset; j++) {
+                    int px = x + j; // Coordonnée x du voisin
+                    int py = y + i; // Coordonnée y du voisin
+
+                    // Vérification des bords de l'image (pixels hors limites)
+                    if (px >= 0 && px < width && py >= 0 && py < height) {
+                        sum += img->data[py * width + px] * kernel[i + offset][j + offset];
+                    }
                 }
             }
-            newData[y * img->width + x] = (sum > 255) ? 255 : (sum < 0) ? 0 : (unsigned char)sum;
+
+            // Clamp la valeur entre 0 et 255
+            if (sum > 255) {
+                sum = 255;
+            } else if (sum < 0) {
+                sum = 0;
+            }
+
+            newData[y * width + x] = (unsigned char)round(sum);
         }
     }
+
+    // Mise à jour des données de l'image avec les pixels filtrés
     free(img->data);
     img->data = newData;
 }
-*/
+
 

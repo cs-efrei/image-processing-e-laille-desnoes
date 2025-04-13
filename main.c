@@ -2,7 +2,7 @@
 #include "t_bmp8.h"
 
 int main() {
-    char filename[256];
+    const char filename[256];
     int choice;
     t_bmp8 *img = NULL;
 
@@ -12,25 +12,30 @@ int main() {
 
         if (choice == 1) {
             printf("Entrez le nom du fichier : ");
-            scanf("%s", filename);
+            scanf("%s", &filename);
             img = bmp8_loadImage(filename);
-        } else if (choice == 2 && img) {
+        }
+        else if (choice == 2 && img) {
             printf("Nom du fichier de sortie : ");
             scanf("%s", filename);
             bmp8_saveImage(filename, img);
-        } /*else if (choice == 3 && img) {
+        }
+        else if (choice == 3 && img) {
             bmp8_negative(img);
-        } else if (choice == 4 && img) {
+        }
+        else if (choice == 4 && img) {
             int value;
             printf("Valeur de luminosité (+/-) : ");
             scanf("%d", &value);
             bmp8_brightness(img, value);
-        } else if (choice == 5 && img) {
+        }
+        else if (choice == 5 && img) {
             int threshold;
             printf("Valeur de seuil : ");
             scanf("%d", &threshold);
             bmp8_threshold(img, threshold);
-        } */ else if (choice == 6) {
+        }
+        else if (choice == 6) {
             if (img) bmp8_free(img);
             break;
         } else {
