@@ -4,8 +4,6 @@
 // les matrices
 
 
-float blox_blur[3][3] = {{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9}};
-float gaussian_blur[3][3] = {{1.0/16,1.0/8,1.0/16},{1.0/8,1.0/4,1.0/8},{1.0/16,1.0/8,1.0/16}};
 float outline[3][3] = {{-1.0,-1.0,-1.0},{-1.0,8.0,-1.0},{-1.0,-1.0,-1.0}};
 float emboss[3][3] = {{-2.0,-1.0,0},{-1.0,1.0,1.0},{0,1.0,2.0}};
 float sharpen[3][3] = {{0,-1.0,0},{-1.0,5.0,-1.0},{0,-1.0,0}};
@@ -30,22 +28,29 @@ int main() {
             bmp8_saveImage(filename, img);
         }
         else if (choice == 3 && img) {
-            printf("1. negatif\n 2.Luminosite \n3. Binarisation \n4. Flou \n5. Flou gaussien \n5. Nettete \n6. Contours \n7. Relief \n8. Retourner au menu precedent \nVotre choix : ");
+            printf("1. negatif\n 2.Luminosite \n3. Binarisation \n4. Flou \n5. Flou gaussien \n6. Nettete \n7. Contours \n8. Relief \n91. Retourner au menu precedent \nVotre choix : ");
             scanf(" %d", &choice);
-            int value;
+            int value, kernelSize = 3;
             if (choice==1) {
                     bmp8_negative(img);
                 }
             else if (choice==2){
-                    printf("Comment voulez vous changer la luminausité : ");
-                    scanf(" %d", &value);
-                    bmp8_brightness(img, value);
+                printf("Comment voulez vous changer la luminausité : ");
+                scanf(" %d", &value);
+                bmp8_brightness(img, value);
                 }
             else if (choice==3){
-                    printf("Entrez un entier pour la binarisation : ");
-                    scanf("%d", &value);
-                    bmp8_threshold(img, value);
-
+                printf("Entrez un entier pour la binarisation : ");
+                scanf("%d", &value);
+                bmp8_threshold(img, value);
+            }
+            else if (choice==4) {
+                float blox_blur[3][3] = {{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9}};
+                bmp8_applyFilter(&img, blox_blur, kernelSize);
+            }
+            else if (choice==5) {
+                float gaussian_blur[3][3] = {{1.0/16,1.0/8,1.0/16},{1.0/8,1.0/4,1.0/8},{1.0/16,1.0/8,1.0/16}};
+                bmp8_applyFilter(&img, gaussian_blur, kernelSize);
             }
         }
         else if (choice == 4 && img) {

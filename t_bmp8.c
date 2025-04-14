@@ -47,7 +47,7 @@ void bmp8_free(t_bmp8 *img) {
 }
 
 void bmp8_printInfo(t_bmp8 *img) {
-    printf("Image Info");
+    printf("Image Info\n");
     printf("    Width: %d\n", img->width);
     printf("    Height: %d\n", img->height);
     printf("    Color Depth: %d\n", img->colorDepth);
@@ -87,21 +87,11 @@ void bmp8_threshold(t_bmp8 *img, int threshold) {
 
 // Fonction pour appliquer un filtre sur une image en niveaux de gris
 void bmp8_applyFilter(t_bmp8 *img, float **kernel, int kernelSize) {
-    if (img == NULL || img->data == NULL || kernel == NULL || kernelSize % 2 == 0) {
-        return; // Vérification des paramètres
-    }
-
     unsigned int width = img->width;
     unsigned int height = img->height;
     int offset = kernelSize / 2;
-
     // Allocation de mémoire pour stocker les nouveaux pixels après filtration
     unsigned char *newData = (unsigned char *)malloc(img->dataSize);
-    if (newData == NULL) {
-        printf("Erreur d'allocation de mémoire.\n");
-        return;
-    }
-
     // Application du filtre par convolution
     for (unsigned int y = 0; y < height; y++) {
         for (unsigned int x = 0; x < width; x++) {
