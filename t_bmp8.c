@@ -26,8 +26,8 @@ t_bmp8* bmp8_loadImage(const char *filename) {
     fread(img->colorTable, sizeof(unsigned char), 1024, file);
     img->data = (unsigned char *)malloc(img->dataSize);
     fread(img->data, sizeof(unsigned char), img->dataSize, file);
-    fclose(file); // ferme le fichier
-    printf("Image chargée avec succès !");
+    // ferme le fichier
+    printf("Image chargee avec succes !");
     return img;
 }
 
@@ -37,7 +37,7 @@ void bmp8_saveImage(const char *filename, t_bmp8 *img) {
     fwrite(img->colorTable, sizeof(unsigned char), 1024, file);
     fwrite(img->data, sizeof(unsigned char), img->dataSize, file);
     fclose(file);
-    printf("Image sauvegardée avec succès !");
+    printf("Image sauvegardée avec succes !");
 }
 
 void bmp8_free(t_bmp8 *img) {

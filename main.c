@@ -1,6 +1,15 @@
 // main.c - Interface en ligne de commande
 #include "t_bmp8.h"
 
+// les matrices
+
+
+float blox_blur[3][3] = {{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9}};
+float gaussian_blur[3][3] = {{1.0/16,1.0/8,1.0/16},{1.0/8,1.0/4,1.0/8},{1.0/16,1.0/8,1.0/16}};
+float outline[3][3] = {{-1.0,-1.0,-1.0},{-1.0,8.0,-1.0},{-1.0,-1.0,-1.0}};
+float emboss[3][3] = {{-2.0,-1.0,0},{-1.0,1.0,1.0},{0,1.0,2.0}};
+float sharpen[3][3] = {{0,-1.0,0},{-1.0,5.0,-1.0},{0,-1.0,0}};
+
 int main() {
     const char filename[256];
     int choice;
@@ -16,37 +25,35 @@ int main() {
             img = bmp8_loadImage(filename);
         }
         else if (choice == 2 && img) {
-            printf("Chemin du fichier :");
+            printf("Chemin du fichier : ");
             scanf("%s", filename);
             bmp8_saveImage(filename, img);
         }
         else if (choice == 3 && img) {
-            printf("1. Négatif\n 2. Luminosité \n3. Binarisation \n4. Flou \n5. Flou gaussien \n5. Netteté \n6. Contours \n7. Relief \n8. Retourner au menu précédent");
+            printf("1. negatif\n 2.Luminosite \n3. Binarisation \n4. Flou \n5. Flou gaussien \n5. Nettete \n6. Contours \n7. Relief \n8. Retourner au menu precedent \nVotre choix : ");
             scanf(" %d", &choice);
-            switch (choice) {
-                case 1:
-                    bmp8_negative(t_bmp8 *img);
-                case 2:
-                    int value;
-                    printf("Comment voulez vous changer la luminausité.");
+            int value;
+            if (choice==1) {
+                    bmp8_negative(img);
+                }
+            else if (choice==2){
+                    printf("Comment voulez vous changer la luminausité : ");
                     scanf(" %d", &value);
-                    bmp8_brightness(t_bmp8 *img, value);
-                case 3:
-                    int value;
-                    printf("entrez un entier pour la binarisation");
+                    bmp8_brightness(img, value);
+                }
+            else if (choice==3){
+                    printf("Entrez un entier pour la binarisation : ");
                     scanf("%d", &value);
-                    bmp8_threshold(t_bmp8 *img, value);
-                case 4:
-                    return;
+                    bmp8_threshold(img, value);
+
             }
-            bmp8_applyFilter(img);
         }
         else if (choice == 4 && img) {
-            bmp8_saveImage(img);
+            bmp8_printInfo(img);
         }
-        else if (choice == 5 && img) {
+        else if (choice == 5) {
             bmp8_free(img);
-            return;
+            return 0;
         }
         else {
             printf("Option invalide ou image non chargée.\n");
