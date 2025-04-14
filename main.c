@@ -1,12 +1,7 @@
 // main.c - Interface en ligne de commande
 #include "t_bmp8.h"
 
-// les matrices
 
-
-float outline[3][3] = {{-1.0,-1.0,-1.0},{-1.0,8.0,-1.0},{-1.0,-1.0,-1.0}};
-float emboss[3][3] = {{-2.0,-1.0,0},{-1.0,1.0,1.0},{0,1.0,2.0}};
-float sharpen[3][3] = {{0,-1.0,0},{-1.0,5.0,-1.0},{0,-1.0,0}};
 
 int main() {
     const char filename[256];
@@ -45,12 +40,25 @@ int main() {
                 bmp8_threshold(img, value);
             }
             else if (choice==4) {
-                float blox_blur[3][3] = {{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9}};
+                float **blox_blur = malloc(kernelSize * sizeof(float*));
+                blox_blur[3][3] = {{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9},{1.0/9,1.0/9,1.0/9}};
                 bmp8_applyFilter(&img, blox_blur, kernelSize);
             }
             else if (choice==5) {
                 float gaussian_blur[3][3] = {{1.0/16,1.0/8,1.0/16},{1.0/8,1.0/4,1.0/8},{1.0/16,1.0/8,1.0/16}};
                 bmp8_applyFilter(&img, gaussian_blur, kernelSize);
+            }
+            else if (choice==6) {
+                float outline[3][3] = {{-1.0,-1.0,-1.0},{-1.0,8.0,-1.0},{-1.0,-1.0,-1.0}};
+                bmp8_applyFilter(&img, outline, kernelSize);
+            }
+            else if (choice==7) {
+                float emboss[3][3] = {{-2.0,-1.0,0},{-1.0,1.0,1.0},{0,1.0,2.0}};
+                bmp8_applyFilter(&img, emboss, kernelSize);
+            }
+            else if (choice==8) {
+                float sharpen[3][3] = {{0,-1.0,0},{-1.0,5.0,-1.0},{0,-1.0,0}};
+                bmp8_applyFilter(&img, sharpen, kernelSize);
             }
         }
         else if (choice == 4 && img) {

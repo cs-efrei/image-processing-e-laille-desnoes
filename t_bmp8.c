@@ -87,15 +87,15 @@ void bmp8_threshold(t_bmp8 *img, int threshold) {
 
 // Fonction pour appliquer un filtre sur une image en niveaux de gris
 void bmp8_applyFilter(t_bmp8 *img, float **kernel, int kernelSize) {
-    unsigned int width = img->width;
-    unsigned int height = img->height;
+    int width = img->width;
+    int height = img->height;
     int offset = kernelSize / 2;
     // Allocation de mémoire pour stocker les nouveaux pixels après filtration
     unsigned char *newData = (unsigned char *)malloc(img->dataSize);
     // Application du filtre par convolution
     for (unsigned int y = 0; y < height; y++) {
         for (unsigned int x = 0; x < width; x++) {
-            float sum = 0.0;
+            float sum = 0.0f;
 
             // Convolution selon la formule
             for (int i = -offset; i <= offset; i++) {
@@ -105,19 +105,15 @@ void bmp8_applyFilter(t_bmp8 *img, float **kernel, int kernelSize) {
 
                     // Vérification des bords de l'image (pixels hors limites)
                     if (px >= 0 && px < width && py >= 0 && py < height) {
-                        sum += img->data[py * width + px] * kernel[i + offset][j + offset];
+                        unsigned char pixel = img->data[py * width + px];
+                        float coeff = kernel[i + offset][j + offset];
+                        sum += pixel * coeff;
                     }
                 }
+                // Clamp la valeur entre 0 et 255
+                sum = fminf(255.0f, fmaxf(0.0f, sum));
+                newData[y * width + x] = (int)roundf(sum);
             }
-
-            // Clamp la valeur entre 0 et 255
-            if (sum > 255) {
-                sum = 255;
-            } else if (sum < 0) {
-                sum = 0;
-            }
-
-            newData[y * width + x] = (unsigned char)round(sum);
         }
     }
 
