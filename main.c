@@ -21,6 +21,24 @@ int main() {
             bmp8_saveImage(filename, img);
         }
         else if (choice == 3 && img) {
+            printf("1. Négatif\n 2. Luminosité \n3. Binarisation \n4. Flou \n5. Flou gaussien \n5. Netteté \n6. Contours \n7. Relief \n8. Retourner au menu précédent");
+            scanf(" %d", &choice);
+            switch (choice) {
+                case 1:
+                    bmp8_negative(t_bmp8 *img);
+                case 2:
+                    int value;
+                    printf("Comment voulez vous changer la luminausité.");
+                    scanf(" %d", &value);
+                    bmp8_brightness(t_bmp8 *img, value);
+                case 3:
+                    int value;
+                    printf("entrez un entier pour la binarisation");
+                    scanf("%d", &value);
+                    bmp8_threshold(t_bmp8 *img, value);
+                case 4:
+                    return;
+            }
             bmp8_applyFilter(img);
         }
         else if (choice == 4 && img) {
@@ -28,6 +46,7 @@ int main() {
         }
         else if (choice == 5 && img) {
             bmp8_free(img);
+            return;
         }
         else {
             printf("Option invalide ou image non chargée.\n");
