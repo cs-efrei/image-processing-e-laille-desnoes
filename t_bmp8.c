@@ -7,7 +7,8 @@
 
 t_bmp8* bmp8_loadImage(const char *filename) {
     // permet de lire une image en niveaux de gris à partir d’un fichier BMP, filename
-    FILE *file = fopen(filename, "rb"); //Ouvre le fichier en mode binaire
+    FILE *file = NULL;
+    file = fopen(filename, "rb"); //Ouvre le fichier en mode binaire
     // FILE est une structure qui représente un fichier ouvert en C. Elle est définie dans la bibliothèque <stdio.h>.
     if (!file) { //file vaut NULL si l'ouverture du fichier échoue alors sir l'ouverture echoue, !file vaut vrai
         printf("Erreur : Impossible d'ouvrir le fichier %s\n", filename);
@@ -26,6 +27,7 @@ t_bmp8* bmp8_loadImage(const char *filename) {
     img->data = (unsigned char *)malloc(img->dataSize);
     fread(img->data, sizeof(unsigned char), img->dataSize, file);
     fclose(file); // ferme le fichier
+    printf("Image chargée avec succès !");
     return img;
 }
 
@@ -35,6 +37,7 @@ void bmp8_saveImage(const char *filename, t_bmp8 *img) {
     fwrite(img->colorTable, sizeof(unsigned char), 1024, file);
     fwrite(img->data, sizeof(unsigned char), img->dataSize, file);
     fclose(file);
+    printf("Image sauvegardée avec succès !");
 }
 
 void bmp8_free(t_bmp8 *img) {
@@ -44,9 +47,11 @@ void bmp8_free(t_bmp8 *img) {
 }
 
 void bmp8_printInfo(t_bmp8 *img) {
-    printf("Width: %d\n", img->width);
-    printf("Height: %d\n", img->height);
-    printf("Data Size: %d\n", img->dataSize);
+    printf("Image Info");
+    printf("    Width: %d\n", img->width);
+    printf("    Height: %d\n", img->height);
+    printf("    Color Depth: %d\n", img->colorDepth);
+    printf("    Data Size: %d\n", img->dataSize);
 }
 
 // Fonction pour inverser les couleurs de l'image

@@ -7,38 +7,29 @@ int main() {
     t_bmp8 *img = NULL;
 
     while (1) {
-        printf("\n1. Charger une image\n2. Sauvegarder une image\n3. Appliquer un négatif\n4. Modifier la luminosité\n5. Seuillage\n6. Quitter\nVotre choix : ");
-        scanf("%d", &choice);
+        printf("\n1. Ouvrir une image\n2. Sauvegarder une image\n3. Appliquer un filtre\n4. Afficher les informations de l'image\n5. Quitter\nVotre choix : ");
+        scanf(" %d", &choice);
 
         if (choice == 1) {
-            printf("Entrez le nom du fichier : ");
+            printf("Chemin du fichier : ");
             scanf("%s", &filename);
             img = bmp8_loadImage(filename);
         }
         else if (choice == 2 && img) {
-            printf("Nom du fichier de sortie : ");
+            printf("Chemin du fichier :");
             scanf("%s", filename);
             bmp8_saveImage(filename, img);
         }
         else if (choice == 3 && img) {
-            bmp8_negative(img);
+            bmp8_applyFilter(img);
         }
         else if (choice == 4 && img) {
-            int value;
-            printf("Valeur de luminosité (+/-) : ");
-            scanf("%d", &value);
-            bmp8_brightness(img, value);
+            bmp8_saveImage(img);
         }
         else if (choice == 5 && img) {
-            int threshold;
-            printf("Valeur de seuil : ");
-            scanf("%d", &threshold);
-            bmp8_threshold(img, threshold);
+            bmp8_free(img);
         }
-        else if (choice == 6) {
-            if (img) bmp8_free(img);
-            break;
-        } else {
+        else {
             printf("Option invalide ou image non chargée.\n");
         }
     }
