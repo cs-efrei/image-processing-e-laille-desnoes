@@ -85,41 +85,60 @@ void bmp8_threshold(t_bmp8 *img, int threshold) {
     }
 }
 
-// Fonction pour appliquer un filtre sur une image en niveaux de gris
-void bmp8_applyFilter(t_bmp8 *img, float **kernel, int kernelSize) {
-    int width = img->width;
-    int height = img->height;
+
+
+void bmp8_applyFilter(t_bmp8 *img, float kernel[3][3], int kernelSize) {
+    unsigned int width = img->width;
+    unsigned int height = img->height;
     int offset = kernelSize / 2;
-    // Allocation de mémoire pour stocker les nouveaux pixels après filtration
+
+    // Vérifie que img->data existe
+    if (img->data == NULL) {
+        printf("Erreur : les données de l'image sont nulles\n");
+        return;
+    }
+
+    // Vérifie que la taille est correcte
+    if (img->dataSize != width * height) {
+        printf("Alerte : img->dataSize incorrecte (%u au lieu de %u)\n", img->dataSize, width * height);
+        img->dataSize = width * height;
+    }
+
+    // Alloue un tableau temporaire
     unsigned char *newData = (unsigned char *)malloc(img->dataSize);
-    // Application du filtre par convolution
+    if (!newData) {
+        printf("Erreur malloc\n");
+        return;
+    }
+
     for (unsigned int y = 0; y < height; y++) {
         for (unsigned int x = 0; x < width; x++) {
             float sum = 0.0f;
 
-            // Convolution selon la formule
             for (int i = -offset; i <= offset; i++) {
                 for (int j = -offset; j <= offset; j++) {
-                    int px = x + j; // Coordonnée x du voisin
-                    int py = y + i; // Coordonnée y du voisin
+                    int py = y + i;
+                    int px = x + j;
 
-                    // Vérification des bords de l'image (pixels hors limites)
-                    if (px >= 0 && px < width && py >= 0 && py < height) {
+                    if (px >= 0 && px < (int)width && py >= 0 && py < (int)height) {
                         unsigned char pixel = img->data[py * width + px];
                         float coeff = kernel[i + offset][j + offset];
                         sum += pixel * coeff;
                     }
                 }
-                // Clamp la valeur entre 0 et 255
-                sum = fminf(255.0f, fmaxf(0.0f, sum));
-                newData[y * width + x] = (int)roundf(sum);
             }
+
+            // Clamp
+            if (sum > 255) sum = 255;
+            if (sum < 0) sum = 0;
+
+            newData[y * width + x] = (unsigned char)roundf(sum);
         }
     }
 
-    // Mise à jour des données de l'image avec les pixels filtrés
+    // Remplace les données
     free(img->data);
     img->data = newData;
+
+    printf("Filtre appliqué avec succès ✅\n");
 }
-
-
