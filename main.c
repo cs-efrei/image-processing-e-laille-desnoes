@@ -13,7 +13,7 @@ int main() {
         scanf(" %d", &choice);
 
         if (choice == 1) {
-            printf("Chemin du fichier : ");
+            printf("Chemin du fichier :");
             scanf("%s", &filename);
             img = bmp8_loadImage(filename);
         }
