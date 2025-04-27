@@ -6,27 +6,20 @@
 #include <math.h> // utile que pour le round de la fonction applyfilter
 
 t_bmp8* bmp8_loadImage(const char *filename) {
-    // permet de lire une image en niveaux de gris à partir d’un fichier BMP, filename
     FILE *file = NULL;
-    file = fopen(filename, "rb"); //Ouvre le fichier en mode binaire
-    // FILE est une structure qui représente un fichier ouvert en C. Elle est définie dans la bibliothèque <stdio.h>.
-    if (!file) { //file vaut NULL si l'ouverture du fichier échoue alors sir l'ouverture echoue, !file vaut vrai
+    file = fopen(filename, "rb");
+    if (!file) { /
         printf("Erreur : Impossible d'ouvrir le fichier %s\n", filename);
         return NULL;
     }
-
     t_bmp8 *img = (t_bmp8 *)malloc(sizeof(t_bmp8));
-    fread(img->header, sizeof(unsigned char), 54, file); // lecture dde l'en-tête BMP
-    // Quand on lit un fichier binaire, chaque octet est traité comme une séquence de 8 bits.
-    // En utilisant sizeof(unsigned char), on s'assure que la lecture est faite octet par octet.
-    // On pourrait aussi écrire fread(header, 1, 54, file);
+    fread(img->header, sizeof(unsigned char), 54, file);
     img->width = *(int*)&img->header[18];
     img->height = *(int*)&img->header[22];
     img->dataSize = img->width * img->height;
     fread(img->colorTable, sizeof(unsigned char), 1024, file);
     img->data = (unsigned char *)malloc(img->dataSize);
     fread(img->data, sizeof(unsigned char), img->dataSize, file);
-    // ferme le fichier
     printf("Image chargee avec succes !");
     return img;
 }
@@ -41,7 +34,6 @@ void bmp8_saveImage(const char *filename, t_bmp8 *img) {
 }
 
 void bmp8_free(t_bmp8 *img) {
-    // libére la mémoire allouée pour stocker une image img
     free(img->data);
     free(img);
 }
@@ -92,24 +84,7 @@ void bmp8_applyFilter(t_bmp8 *img, float kernel[3][3], int kernelSize) {
     unsigned int height = img->height;
     int offset = kernelSize / 2;
 
-    // Vérifie que img->data existe
-    if (img->data == NULL) {
-        printf("Erreur : les données de l'image sont nulles\n");
-        return;
-    }
-
-    // Vérifie que la taille est correcte
-    if (img->dataSize != width * height) {
-        printf("Alerte : img->dataSize incorrecte (%u au lieu de %u)\n", img->dataSize, width * height);
-        img->dataSize = width * height;
-    }
-
-    // Alloue un tableau temporaire
     unsigned char *newData = (unsigned char *)malloc(img->dataSize);
-    if (!newData) {
-        printf("Erreur malloc\n");
-        return;
-    }
 
     for (unsigned int y = 0; y < height; y++) {
         for (unsigned int x = 0; x < width; x++) {
@@ -128,17 +103,12 @@ void bmp8_applyFilter(t_bmp8 *img, float kernel[3][3], int kernelSize) {
                 }
             }
 
-            // Clamp
             if (sum > 255) sum = 255;
             if (sum < 0) sum = 0;
 
             newData[y * width + x] = (unsigned char)roundf(sum);
         }
     }
-
-    // Remplace les données
     free(img->data);
     img->data = newData;
-
-    printf("Filtre appliqué avec succès ✅\n");
 }
