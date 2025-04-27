@@ -8,7 +8,7 @@
 t_bmp8* bmp8_loadImage(const char *filename) {
     FILE *file = NULL;
     file = fopen(filename, "rb");
-    if (!file) { /
+    if (!file) {
         printf("Erreur : Impossible d'ouvrir le fichier %s\n", filename);
         return NULL;
     }
