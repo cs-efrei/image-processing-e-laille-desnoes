@@ -1,8 +1,6 @@
 // main.c - Interface en ligne de commande
 #include "t_bmp8.h"
 
-
-
 int main() {
     const char filename[256];
     int choice;
