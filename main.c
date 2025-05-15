@@ -6,7 +6,8 @@
 #include "t_bmp8.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+
+
 int main() {
     const char filename[256];
     int choice;
