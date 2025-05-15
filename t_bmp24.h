@@ -5,6 +5,10 @@
 #ifndef T_BMP24_H
 #define T_BMP24_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
 // Partie 2 :
 
 typedef struct {

@@ -3,3 +3,7 @@
 //
 
 #include "t_bmp24.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+
