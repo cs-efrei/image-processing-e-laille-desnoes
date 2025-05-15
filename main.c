@@ -1,4 +1,8 @@
 // main.c - Interface en ligne de commande
+
+//ede,kdso
+
+
 #include "t_bmp8.h"
 #include <stdio.h>
 #include <stdlib.h>
